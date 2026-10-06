@@ -12,3 +12,6 @@ data/
 outputs/
 *.csv
 *.xlsx
+.env
+*.pkl
+*.joblib
