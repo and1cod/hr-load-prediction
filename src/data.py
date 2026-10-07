@@ -27,6 +27,8 @@ def clean_data(data: pd.DataFrame) -> pd.DataFrame:
         data.groupby('department_id')['devs_fired'].transform('median')
     )
 
+    data['turnover_rate'] = (data['devs_fired'] + data['devs_hired']) / data['current_staff_count']
+
     for dept_id in [1000164.0, 1000337.0]:
         idx = (data['department_id'] == dept_id) & (data['year'] == 2020.0)
         median_val = data[data['department_id'] == dept_id]['inbound_applications'].median()
