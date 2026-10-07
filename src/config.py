@@ -1,7 +1,12 @@
 from pathlib import Path
 
-DATA_PATH = Path('data') / 'df_ITs.csv'
-OUTPUT_DIR = Path('outputs')
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+DATA_PATH = PROJECT_ROOT / 'data' / 'df_ITs.csv'
+OUTPUT_DIR = PROJECT_ROOT / 'outputs'
+
+MODELS_DIR = PROJECT_ROOT / 'models'
+MODEL_PATH = MODELS_DIR / 'model.joblib'
 
 TARGET = 'yearly_cv_processed'
 
