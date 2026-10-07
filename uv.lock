@@ -334,7 +334,6 @@ name = "hr-load-prediction"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "openpyxl" },
     { name = "pandas" },
     { name = "scikit-learn" },
 ]
@@ -344,13 +343,13 @@ eda = [
     { name = "ipykernel" },
     { name = "matplotlib" },
     { name = "numpy" },
+    { name = "openpyxl" },
     { name = "phik" },
     { name = "seaborn" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=3.0.6" },
     { name = "scikit-learn", specifier = ">=1.9.1" },
 ]
@@ -360,6 +359,7 @@ eda = [
     { name = "ipykernel", specifier = ">=7.4.0" },
     { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "numpy", specifier = ">=2.5.3" },
+    { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "phik", specifier = ">=0.12.5" },
     { name = "seaborn", specifier = ">=0.13.2" },
 ]
