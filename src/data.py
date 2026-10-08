@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.config import DATA_PATH
+from src.config import DATA_PATH, INBOUND_OUTLIER_FACTOR
 
 
 def load_data(path=DATA_PATH) -> pd.DataFrame:
@@ -23,10 +23,9 @@ def clean_data(data: pd.DataFrame) -> pd.DataFrame:
             data.loc[no_history, 'current_staff_count'] * fire_rate
     ).round()
 
-    for dept_id in [1000164.0, 1000337.0]:
-        idx = (data['department_id'] == dept_id) & (data['year'] == 2020.0)
-        median_val = data.loc[data['department_id'] == dept_id, 'inbound_applications'].median()
-        data.loc[idx, 'inbound_applications'] = median_val
+    dept_median = data.groupby('department_id')['inbound_applications'].transform('median')
+    is_outlier = (dept_median > 0) & (data['inbound_applications'] > INBOUND_OUTLIER_FACTOR * dept_median)
+    data.loc[is_outlier, 'inbound_applications'] = dept_median[is_outlier]
 
     data['turnover_rate'] = (data['devs_fired'] + data['devs_hired']) / data['current_staff_count']
 
