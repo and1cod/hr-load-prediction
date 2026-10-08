@@ -8,31 +8,27 @@ def load_data(path=DATA_PATH) -> pd.DataFrame:
 
 def clean_data(data: pd.DataFrame) -> pd.DataFrame:
 
-    data = data.copy()
-    data = data.sort_values(by=['department_id', 'year'])
-    data = data[data['department_id'].isna() == False]
+    data = data[data['department_id'].notna()].sort_values(by=['department_id', 'year']).copy()
+
+    known = data[['devs_fired', 'current_staff_count']].dropna()
+    fire_rate = (known['devs_fired'] / known['current_staff_count']).median()
 
     num_cols = data.select_dtypes(include='number').columns
     data[num_cols] = data[num_cols].fillna(
         data.groupby('department_id')[num_cols].transform('median')
     )
 
-    idx = data['department_id'] == 1000456.0
-    data.loc[idx, 'devs_fired'] = (
-            data.loc[idx, 'current_staff_count'].shift(1)
-            + data.loc[idx, 'devs_hired']
-            - data.loc[idx, 'current_staff_count']
-    )
-    data['devs_fired'] = data['devs_fired'].fillna(
-        data.groupby('department_id')['devs_fired'].transform('median')
-    )
-
-    data['turnover_rate'] = (data['devs_fired'] + data['devs_hired']) / data['current_staff_count']
+    no_history = data['devs_fired'].isna()
+    data.loc[no_history, 'devs_fired'] = (
+            data.loc[no_history, 'current_staff_count'] * fire_rate
+    ).round()
 
     for dept_id in [1000164.0, 1000337.0]:
         idx = (data['department_id'] == dept_id) & (data['year'] == 2020.0)
-        median_val = data[data['department_id'] == dept_id]['inbound_applications'].median()
+        median_val = data.loc[data['department_id'] == dept_id, 'inbound_applications'].median()
         data.loc[idx, 'inbound_applications'] = median_val
+
+    data['turnover_rate'] = (data['devs_fired'] + data['devs_hired']) / data['current_staff_count']
 
     return data
 
