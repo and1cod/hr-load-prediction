@@ -1,12 +1,19 @@
 import pandas as pd
 
-from src.config import DATA_PATH, INBOUND_OUTLIER_FACTOR
-
+from src.config import DATA_PATH, INBOUND_OUTLIER_FACTOR, REQUIRED_COLUMNS
 
 def load_data(path=DATA_PATH) -> pd.DataFrame:
     return pd.read_csv(path)
 
+def validate_columns(data: pd.DataFrame) -> None:
+
+    missing = set(REQUIRED_COLUMNS) - set(data.columns)
+    if missing:
+        raise ValueError(f'В данных нет обязательных колонок: {sorted(missing)}')
+
 def clean_data(data: pd.DataFrame) -> pd.DataFrame:
+
+    validate_columns(data)
 
     data = data[data['department_id'].notna()].sort_values(by=['department_id', 'year']).copy()
 
@@ -44,4 +51,3 @@ def build_features(data: pd.DataFrame) -> pd.DataFrame:
     data['net_hiring'] = data['devs_hired'] - data['devs_fired']
 
     return data
-

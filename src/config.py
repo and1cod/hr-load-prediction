@@ -37,3 +37,9 @@ RIDGE_ALPHA = 1.0
 FORECAST_YEARS = [2025, 2026, 2027]
 
 INBOUND_OUTLIER_FACTOR = 5
+
+REQUIRED_COLUMNS = [
+    'department_id', 'year', 'tech_stack',
+    'current_staff_count', 'yearly_cv_processed', 'active_projects_count',
+    'devs_hired', 'devs_fired', 'inbound_applications', 'tech_brand_rating',
+]
